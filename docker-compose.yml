@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  api:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      - DATABASE_URL=postgresql://taskflow:pass@db:5432/taskflow_pro
+      - REDIS_URL=redis://redis:6379/0
+    depends_on: [db, redis]
+  frontend:
+    build: ./frontend
+    ports: ["3000:3000"]
+    depends_on: [api]
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: taskflow_pro
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: pass
+    ports: ["5432:5432"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
